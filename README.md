@@ -29,4 +29,5 @@ In that case the plot will be activated through JupyterDash instance;
 (2) Directly from the command line using
 ```console
 python app.py
-``` and openning the URL address `http://127.0.0.1:8051/` in your browser. In this case, the plot will be activated through the standard Plotly Dash instance
+```
+and openning the URL address `http://127.0.0.1:8051/` in your browser. In this case, the plot will be activated through the standard Plotly Dash instance
