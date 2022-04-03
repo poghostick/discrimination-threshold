@@ -213,7 +213,7 @@ class InteractiveDiscriminationThreshold:
                 JupyterDash and the plot is drawn inside the notebook; if
                 'external', then the app is created as JupyterDash
                 instance and the plot is drawn in separate window
-                (default is 'jupyter_inline')
+                (default is 'inline')
         Returns
         -------
             None

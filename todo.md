@@ -1,11 +1,10 @@
 * repository
-    - create .gitignore upload files to github   
-    - write text in notebook
+    - ~write text in notebook~
     - Clean code in interactive_discrimination_threshold.py
     - Clean code in app.py
     - Write README.md
     - Final upload
-* Text
+* Blogpost text
     - Write Dataset and Model
     - Write Main Terms and Definitions
     - Write Existing Implementation
