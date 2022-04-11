@@ -2,11 +2,13 @@
     - ~write text in notebook~
     - Clean code in interactive_discrimination_threshold.py
     - Clean code in app.py
-    - Write README.md
+    - Add F1 score strength
+    - Replace gist for transform_data() and embed into text
+    - ~Write README.md~
     - Final upload
 * Blogpost text
-    - Write Dataset and Model
-    - Write Main Terms and Definitions
+    -~Write Dataset and Model~
+    - ~Write Main Terms and Definitions~
     - Write Existing Implementation
     - Write Tailor-Made Interactive Plot
     - Write Conclusion
