@@ -61,7 +61,7 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
                     ),
                 ],
                 style={'width': '100px', 'display': 'inline-block',
-                       'margin-left': '5%', 'margin-top': '25px'}
+                       'margin-left': '1%', 'margin-top': '25px'}
             ),
             html.Div(
                 dcc.Checklist(
@@ -74,8 +74,24 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
                     value=['precision', 'recall', 'queue_rate'],
                     labelStyle={'display': 'block'},
                 ),
-                style={'width': '180px', 'display': 'inline-block',
-                       'margin-left': '7%', 'margin-top': '25px'}
+                style={'width': '5%', 'display': 'inline-block',
+                       'margin-left': '4%', 'margin-top': '25px'}
+            ),
+            html.Div([
+                'weight(Recall) / weight(Precision)',
+                dcc.Input(
+                    id='recall_over_precision',
+                    type='number',
+                    step=0.1,
+                    value=1,
+                    style={'margin-top': '15px'}
+                ),
+                
+            ],
+#                 style={'width': '100px', 'display': 'inline-block',
+#                        'margin-left': '1%', 'margin-top': '25px'}
+                style={'width': '10%', 'display': 'inline-block',
+                       'margin-top': '30px', 'margin-left': '2%'}
             ),
             html.Div([
                 dcc.Checklist(

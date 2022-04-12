@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 from typing import Dict, Tuple, Union
 
-from app import build_plot
+from appcopy import build_plot
 
 
 class InteractiveDiscriminationThreshold:

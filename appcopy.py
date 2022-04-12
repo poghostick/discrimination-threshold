@@ -46,9 +46,20 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
         app = Dash(__name__, server=server, external_stylesheets=[dbc.themes.BOOTSTRAP])
     app.layout = html.Div([
         html.Div([
-            html.Div(
-                [
-                    'Interval',
+            html.Div([
+                html.Div([
+                    html.Label('weight(Recall) / weight(Precision)',
+                               style={'width': '300px'}),
+                    dcc.Input(
+                        id='recall_over_precision',
+                        type='number',
+                        min=0,
+                        step=0.1,
+                        value=1,
+                        style={'margin-top': '5px', 'margin-bottom': '10px', 'width': '100px'}
+                        )]),
+                html.Div([
+                    html.Label('Interval'),
                     dcc.Dropdown(
                         id='interval_dropdown',
                         clearable=False,
@@ -57,11 +68,11 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
                             {'label': f'{ii}%', 'value': ii / 100}
                             for ii in [0, 5, 10, 25, 50, 75, 90, 95]
                         ],
-                        style={'margin-top': '10px'}
-                    ),
+                        style={'margin-top': '2px', 'width': '100px'}
+                    )]),
                 ],
-                style={'width': '100px', 'display': 'inline-block',
-                       'margin-left': '5%', 'margin-top': '25px'}
+                style={'width': '280px', 'display': 'inline-block',
+                       'margin-left': '1%', 'margin-top': '15px'}
             ),
             html.Div(
                 dcc.Checklist(
@@ -74,8 +85,8 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
                     value=['precision', 'recall', 'queue_rate'],
                     labelStyle={'display': 'block'},
                 ),
-                style={'width': '180px', 'display': 'inline-block',
-                       'margin-left': '7%', 'margin-top': '25px'}
+                style={'width': '150px', 'display': 'inline-block',
+                       'margin-left': '4%', 'margin-top': '35px'}
             ),
             html.Div([
                 dcc.Checklist(
@@ -99,9 +110,11 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
                         value=0,
                         placeholder='Enter cost (+) per unit',
                         style={'width': '190px', 'margin-bottom': '1%',
-                               'margin-left': '65px'})]),
+                               'margin-left': '12px'
+                               }
+                        )]),
                 html.Div([
-                    html.Label('Revenue / Loss per True Positive'),
+                    html.Label('Revenue per True Positive'),
                     dcc.Input(
                         id='revenue_loss',
                         type='number',
@@ -109,7 +122,8 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
                         value=0,
                         placeholder='Enter revenue (+) or loss (-)',
                         style={'width': '190px', 'margin-bottom': '1%',
-                               'margin-left': '10px'})])],
+                               'margin-left': '10px'
+                               })])],
                 style={'width': '50%', 'display': 'inline-block',
                        'margin-top': '20px', 'margin-left': '5%'})],
             style={'display': 'flex'},
@@ -134,22 +148,31 @@ def build_plot(data: pd.DataFrame, width: int = 1200,
 
     @app.callback(
         Output('discrimination_threshold', 'figure'),
+        Input('recall_over_precision', 'value'),
         Input('interval_dropdown', 'value'),
         Input('checklist', 'value'),
         Input('payout', 'value'),
         Input('slider_id', 'value'),
         Input('cost_per_unit', 'value'),
-        Input('revenue_loss', 'value'))
-    def update_graph(interval_dropdown: int,
+        Input('revenue_loss', 'value')
+    )
+    def update_graph(recall_over_precision: float,
+                     interval_dropdown: int,
                      checklist: List,
                      payout: List,
                      slider: int,
                      cost_per_unit: float,
                      revenue_loss: float):
         """Draws the plot based on the widget values"""
+        if recall_over_precision != 1:
+            data['f1'] = 0
+            beta = recall_over_precision ** 2
+            data.loc[data['precision'] * data['recall'] != 0, 'f1'] = (
+                (1 + beta) * data['precision'] * data['recall'] 
+                / (beta * data['precision'] + data['recall'])
+            )
         df_grp = data.groupby('thresholds')
         thresholds = list(df_grp.groups.keys())
-        # widget_values = get_widget_values(widget)
         metric_title = {'precision': 'Precision', 'recall': 'Recall',
                         'queue_rate': 'Queue Rate', 'f1': 'F1-Score'}
         px_colors = px.colors.qualitative.G10
