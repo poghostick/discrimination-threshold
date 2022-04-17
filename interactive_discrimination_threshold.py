@@ -1,6 +1,5 @@
 """The module contains the class InteractiveDiscriminationThreshold
-for building an interactive plot which helps to find the optimal
-threshold dividing positive and negative classes in binary classifiers.
+for constructing Plotly dashboard with an interactive DT plot.
 """
 
 import numpy as np
@@ -10,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 from typing import Dict, Tuple, Union
 
-from appcopy import build_plot
+from app import build_plot
 
 
 class InteractiveDiscriminationThreshold:
@@ -22,16 +21,16 @@ class InteractiveDiscriminationThreshold:
     ----------
     model: sklearn.base.ClassifierMixin
         Any binary classification model from scikit-learn (or scikit-learn
-        pipeline with such a model as the last step) containing the method
+        pipeline ending with such a model) which contains the method
         predict_proba() for predicting probability of the response.
     X: numpy.array
         2-dimensional training vector with predictors.
     y: numpy.array
-        Response vectors relative to X.
+        Vector with response values.
     labels: numpy.array
-        Binary vector where the first element (with index 0) is the label
-        for the negative response value, and the second element (with
-        index 1) corresponds to the positive response value.
+        Binary vector where the first element (with index 0) corresponds to 
+        the negative class of the response variable, and the second element
+        (with index 1) corresponds to the positive class.
     test_size: float
         Share of the test set (default is 0.2)
     input_df: pandas.DataFrame
@@ -45,16 +44,16 @@ class InteractiveDiscriminationThreshold:
         F1 score, Q rate and other parameters to be used in the plot and
         stores as the attribute input_df.
     _append_metrics(X: np.array, y_true: np.array) -> pd.DataFrame:
-        Supplements prepare_data() with the values for prediction, recall,
-        F1 score and queue rate per one iteration.
+        Helper function for prepare_data() which supples values for 
+        prediction, recall, F1 score and queue rate for one iteration.
     _get_metrics(true_value: Union[str, int, float], predicted_prob: float,
     threshold: float) -> Tuple:
-        Used as a helper of the internal method _append_metrics() for row-wise
-        calculation of precision, recall, F1 score and queue rate.
+        Helper function for the internal method _append_metrics() which 
+        performs row-wise calculation of precision, recall, F1 score and 
+        queue rate.
     plot(plot_inline: bool = True, width: int = 1200, height: int = 550)
     -> None
-        Generates an interactive version of the Discrimination Threshold
-        plot.
+        Generates the Plotly dashboard for the DT plot.
     """
     
     def __init__(self,
@@ -76,11 +75,11 @@ class InteractiveDiscriminationThreshold:
             X: numpy.array:
                 2-dimensional training vector with predictors.
             y: numpy.array
-                Response vectors relative to X.
+                Vector with response values.
             labels: numpy.array
-                Binary vector where the first element (with index 0) is the
-                label for the negative response value, and the second element
-                (with index 1) corresponds to the positive response value.
+                Binary vector where the first element (with index 0) corresponds to 
+                the negative class of the response variable, and the second element
+                (with index 1) corresponds to the positive class.
             test_size: float
                 A float value between 0 and 1 corresponding to the share of
                 the test set.
@@ -118,9 +117,9 @@ class InteractiveDiscriminationThreshold:
         Parameters
         ----------
             n_iter: int, optional
-                The number of samples with the metrics to be generated
-                (default is 35)
-            store_data: bool, default
+                The number of random subsamples with replacement samples 
+                to be generated from the dataset (default is 35)
+            store_data: bool, optional
                 If True, stores the generated input data into the file
                 'data.csv' (default is False)
         Returns
@@ -139,8 +138,8 @@ class InteractiveDiscriminationThreshold:
                 self.input_df.to_csv('data.csv')
 
     def _append_metrics(self, X: np.array, y_true: np.array) -> pd.DataFrame:
-        """Supplements prepare_data() with the values for prediction, recall,
-        F1 score and queue rate per one iteration.
+        """Helper function for prepare_data() which supples values for 
+        prediction, recall, F1 score and queue rate for one iteration.
 
         Parameters
         ----------
@@ -166,8 +165,9 @@ class InteractiveDiscriminationThreshold:
 
     def _get_metrics(self, true_value: Union[str, int, float],
                      predicted_prob: float, threshold: float) -> Tuple:
-        """Used as a helper of the internal method _append_metrics() for row-wise
-        calculation of precision, recall, F1 score and queue rate.
+        """Helper function for the internal method _append_metrics() which 
+        performs row-wise calculation of precision, recall, F1 score and 
+        queue rate.
 
         Parameters
         ----------
@@ -199,8 +199,7 @@ class InteractiveDiscriminationThreshold:
 
     def plot(self, width: int = 1200, height: int = 550,
              app_mode: str = 'inline') -> None:
-        """Generates an interactive version of the discrimination threshold
-        plot by calling the function build_plot from app.py
+        """Generates the Plotly dashboard for the DT plot.
 
         Parameters
         ----------
@@ -218,7 +217,7 @@ class InteractiveDiscriminationThreshold:
         -------
             None
         """
-        app = build_plot(self.input_df, width, height, app_mode=app_mode)
+        app = build_plot(self.input_df, app_mode=app_mode)
         app.run_server(mode=app_mode)
 
 
