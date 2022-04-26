@@ -60,7 +60,7 @@ class InteractiveDiscriminationThreshold:
                  model: ClassifierMixin,
                  X: np.array,
                  y: np.array,
-                 label_dict: Dict[int, Union[int, float, str]],
+                 label_dict: Dict[int, Union[int, float, str]] = {0: 0, 1: 1},
                  test_size: float = 0.2):
         """Constructs and checks the values of all the necessary attributes for
         creating a class instance.
@@ -76,10 +76,9 @@ class InteractiveDiscriminationThreshold:
                 2-dimensional training vector with predictors.
             y: numpy.array
                 Vector with response values.
-            labels: numpy.array
-                Binary vector where the first element (with index 0) corresponds to 
-                the negative class of the response variable, and the second element
-                (with index 1) corresponds to the positive class.
+            label_dict: dict
+                Dictionary mapping the negative and positive values of target
+                variable to 0 and 1.
             test_size: float
                 A float value between 0 and 1 corresponding to the share of
                 the test set.
@@ -134,8 +133,9 @@ class InteractiveDiscriminationThreshold:
             df_tmp = self._append_metrics(X_test, y_test)
             df_tmp['train_iter'] = train_iter
             self.input_df = pd.concat([self.input_df, df_tmp])
-            if store_data:
-                self.input_df.to_csv('data.csv')
+        self.input_df.reset_index(drop=True, inplace=True)
+        if store_data:
+            self.input_df.to_csv('data.csv')
 
     def _append_metrics(self, X: np.array, y_true: np.array) -> pd.DataFrame:
         """Helper function for prepare_data() which supples values for 
@@ -197,16 +197,11 @@ class InteractiveDiscriminationThreshold:
         queue_rate = np.mean(predicted_prob >= threshold)
         return (pr, rec, f1, queue_rate)
 
-    def plot(self, width: int = 1200, height: int = 550,
-             app_mode: str = 'inline') -> None:
+    def plot(self, app_mode: str = 'inline') -> None:
         """Generates the Plotly dashboard for the DT plot.
 
         Parameters
         ----------
-            width: int, optional
-                Width of the plot (default is 1200)
-            height: int, optional
-                Height of the plot (default is 550)
             app_mode: str, optional
                 If 'inline', the app is being created as instance of
                 JupyterDash and the plot is drawn inside the notebook; if
