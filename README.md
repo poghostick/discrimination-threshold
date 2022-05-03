@@ -1,6 +1,6 @@
 # Discrimination Threshold
 
-This is the accompanying Github repository for the [Medium blogpost](). 
+This is the accompanying Github repository for the [Medium blogpost](https://medium.com/towards-data-science/dt-plot-finding-the-optimal-discrimination-threshold-for-binary-classifier-c3f326d6326f). 
 
 ## How to Install?
 
